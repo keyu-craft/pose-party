@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Inference worker check</title><style>body{font:15px system-ui;background:#f3f2eb;color:#2e3c26;padding:30px}button{font:inherit;padding:12px 20px}pre{white-space:pre-wrap;line-height:1.6}.pulse{width:30px;height:30px;border-radius:50%;background:#e9784f;animation:pulse .8s infinite alternate;margin:20px 0}@keyframes pulse{to{transform:translateX(240px)}}</style></head><body><h1>Inference worker check</h1><button id="run">Run worker check</button><div class="pulse"></div><pre id="result">Ready</pre><script type="module">
+import { InferenceClient } from '/src/inference-client.ts';
+let detector;
+document.getElementById('run').onclick = async () => {
+ const output=document.getElementById('result'), button=document.getElementById('run');button.disabled=true;
+ let frames=0, previous=performance.now(), maxGap=0, active=true;
+ const tick=now=>{if(!active)return;frames++;maxGap=Math.max(maxGap,now-previous);previous=now;requestAnimationFrame(tick)};requestAnimationFrame(tick);
+ try {
+  output.textContent='Loading worker and models…';detector=new InferenceClient();const init=await detector.initialize();
+  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=480;canvas.getContext('2d').fillRect(0,0,640,480);
+  const checks=[];
+  for(let i=0;i<3;i++){const bitmap=await createImageBitmap(canvas);const result=await detector.infer(bitmap,performance.now(),true);checks.push({poseMs:result.poseMs,faceMs:result.faceMs,bodyCount:result.body.length,faceCount:result.face.length});await new Promise(r=>setTimeout(r,50));}
+  output.textContent=JSON.stringify({ok:true,backend:init.backend,poseDelegate:init.poseDelegate,faceDelegate:init.faceDelegate,workerFailure:init.workerFailure??null,renderCallbacks:frames,maxRenderGapMs:Math.round(maxGap),checks},null,2);
+ }catch(error){output.textContent=JSON.stringify({ok:false,message:error.message});}finally{active=false;detector?.close();button.disabled=false;}
+};
+window.addEventListener('pagehide',()=>detector?.close());
+</script></body></html>

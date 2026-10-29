@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.sites-runtime/
+.DS_Store
+/public/mediapipe/
+
+# Local diagnostics and preview artifacts are not part of the published project.
+/log/
+/logs/
+/*preview*.jpg
+/new-poses.jpg
+.env
+.env.*
+!.env.example
+*.local

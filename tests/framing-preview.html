@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>站位提示示意 · 模拟数据</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+body{margin:0;padding:28px;background:#f3f2eb;color:#3c4b32;font-family:system-ui,sans-serif}h1{font-size:22px;font-weight:600;margin:0 0 7px}p{font-size:12px;color:#818c75;margin:0 0 24px}.examples{display:grid;grid-template-columns:1fr 1fr;gap:18px}section{min-width:0;background:#e8ecdf;border:1px solid #d4ddc8;border-radius:14px;padding:15px}h2{font-size:14px;margin:0 0 12px;font-weight:500}.frame{position:relative;background:#252c28;border-radius:10px;overflow:hidden;border:3px solid #9fb887}.frame.close{border-color:#d8ad62}canvas{display:block;width:100%;height:auto}.hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);white-space:nowrap;border-radius:7px;background:#20281fe8;color:#dfe9d4;padding:9px 12px;font-size:14px}.close .hint{background:#523b19e8;color:#f3dfbb}@media(max-width:650px){.examples{grid-template-columns:1fr}body{padding:18px}}
+</style><h1>先留出举手的空间</h1><p>站位提示示意 · 模拟关键点，不使用摄像头</p><div class="examples"></div><script type="module">
+import { observation } from './observations.ts';
+import { POSES } from '../src/poses.ts';
+import { framingIssue } from '../src/framing.ts';
+import { drawSkeleton } from '../src/draw.ts';
+import { COPY } from '../src/i18n.ts';
+const pose = POSES.find(p => p.id === 'up');
+for(const [scale,title] of [[2,'距离过近：举手会超出画面'],[1,'后退并居中：双手完整入镜']]) {
+ const body=observation(pose,1280,720,scale).body,issue=framingIssue(body,1280,720);
+ const section=document.createElement('section'),heading=document.createElement('h2'),frame=document.createElement('div'),canvas=document.createElement('canvas'),hint=document.createElement('span');
+ heading.textContent=title;frame.className='frame'+(issue?' close':'');canvas.width=1280;canvas.height=720;
+ drawSkeleton(canvas,body,false,[],false);
+ const ctx=canvas.getContext('2d'),cx=(1-body[0].x)*1280,cy=body[0].y*720,sy=(body[11].y+body[12].y)*360;
+ ctx.strokeStyle='#a1ad91';ctx.fillStyle='#86927e';ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.arc(cx,cy,34*scale,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(cx,cy+34*scale);ctx.lineTo(cx,sy+175*scale);ctx.stroke();
+ hint.className='hint';hint.textContent=issue?COPY.zh.stepBack:COPY.zh.faceScreen;frame.append(canvas,hint);section.append(heading,frame);document.querySelector('.examples').append(section);
+}
+</script></html>

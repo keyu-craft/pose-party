@@ -1,0 +1,22 @@
+{
+  "name": "pose-party",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/prepare-runtime.mjs",
+    "dev": "vite --host 127.0.0.1",
+    "prebuild": "node scripts/prepare-runtime.mjs",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "0.10.32"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^8.3.5"
+  },
+  "description": "A 60-second webcam party game with real-time pose matching, English/Chinese UI, and built-in or local music."
+}

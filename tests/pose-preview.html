@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pose Party · New poses</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#f3f2eb;color:#272a26;font-family:Arial,sans-serif;padding:30px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}h1{font-size:25px;letter-spacing:-1px;margin:0}header span{font-size:11px;color:#7b876e}main{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}figure{margin:0;border:1px solid #d7ddcd;border-radius:14px;background:#e7ebdd;overflow:hidden}canvas{display:block;width:100%;height:auto}@media(max-width:600px){body{padding:16px}main{grid-template-columns:repeat(2,1fr);gap:10px}h1{font-size:20px}header span{display:none}}
+</style></head>
+<body><header><h1>pose party.</h1><span>6 NEW POSES</span></header><main id="poses"></main>
+<script type="module">
+  import { POSES } from '/src/poses.ts';
+  import { drawTarget } from '/src/draw.ts';
+  for(const pose of POSES.filter(p=>p.headTilt!==undefined)) {
+    const figure=document.createElement('figure');
+    const canvas=document.createElement('canvas');
+    canvas.width=440; canvas.height=400; canvas.role='img'; canvas.setAttribute('aria-label',pose.description.en);
+    figure.append(canvas);document.getElementById('poses').append(figure);drawTarget(canvas,pose);
+  }
+</script></body></html>
