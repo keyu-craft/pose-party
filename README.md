@@ -4,7 +4,7 @@
 
 A webcam party game where you copy a character's pose and see how many you can complete in 60 seconds. Developed as a DT2140 course project exploring body movement as game input.
 
-[中文介绍](README.zh-CN.md) · [Run locally](#run-locally) · [Publish your own game](GITHUB-PUBLISHING.md) · [Development notes](docs/DEVELOPMENT.zh-CN.md)
+[中文介绍](README.zh-CN.md) · [Run locally](#run-locally) · [Development notes](docs/DEVELOPMENT.zh-CN.md)
 
 ![Pose Party interface with the music controls open](docs/images/pose-party.jpg)
 
